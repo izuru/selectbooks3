@@ -1,0 +1,79 @@
+{% extends "cms/base.html" %}
+{% load customfilter %}
+{% block title %}JPRO本日発売書誌{% endblock title %}
+
+{% block content %}
+    <h4 class="mt-4 border-bottom">JPRO本日発売書誌</h4>
+
+    {% include "cms/pagination.html" %}
+
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">表紙</th>
+          <th scope="col">書誌事項</th>
+          <th scope="col">分類件名</th>
+          <!-- <th scope="col">操作</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for jpro in jpro_books %}
+        <tr>
+          <th scope="row">{{ jpro.id }}</th>
+          <td><img src="https://iss.ndl.go.jp/thumbnail/{{ jpro.ISBN|cut:"-" }}" width="112" height="160"
+            onerror="this.onerror=null;this.src='http://images-jp.amazon.com/images/P/{{ jpro.ASIN }}.09.MZZZZZZZ.jpg';"/></td>
+          <td><b>{{ jpro.title }} {{ jpro.volume }}
+            {% if jpro.series %}
+              ({{ jpro.series }})
+            {% endif %}</b><br>
+            {{ jpro.creator }}. {{ jpro.publisher }}, {{ jpro.extent}}
+              {% if jpro.price %}
+                {{ jpro.price}}円
+              {% endif %}
+              {{ jpro.date }}
+              <br>
+            {{ jpro.ISBN }}
+            {% if jpro.description %}
+              {% if jpro.description|length < 200 %}
+              <br><b>[内容紹介]</b>
+                <br>{{ jpro.description }}<br>
+              {% else %}
+                <details><summary><b>[内容紹介]</b>
+                  <br>{{ jpro.description|slice:":100" }}……</summary>
+              {{ jpro.description|slice:"100:" }}</details>
+              {% endif %}
+            {% endif %}
+            {% if jpro.creatornote %}
+            {% if jpro.creatornote|length < 200 %}
+            <b>[著者紹介]</b>
+              <br>{{ jpro.creatornote }}<br>
+            {% else %}
+                <details><summary><b>[著者紹介]</b>
+                  <br>{{ jpro.creatornote|slice:":100" }}……</summary>
+              {{ jpro.creatornote|slice:"100:" }}</details>
+              {% endif %}
+            {% endif %}
+            {% if jpro.keywords %}
+            <b>[キーワード]</b>
+          {{ jpro.keywords|lineSpace }}
+          {% endif %}
+          {% if jpro.ToC %}
+            {% if jpro.ToC|length < 100 %}
+              <br><b>[目次]</b><br>
+              {{ jpro.ToC|lineRep|linebreaksbr }}
+            {% else %}
+              <details><summary><b>[目次]</b></summary>
+                {{ jpro.ToC|lineRep|linebreaksbr }}</details>
+            {% endif %}
+            {% endif %}</td>
+          <td><b>{{ jpro.ccode }}</b><br>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% include "cms/pagination.html" %}
+
+{% endblock content %}
