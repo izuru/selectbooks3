@@ -10,7 +10,7 @@
     <table class="table table-striped table-bordered">
       <thead>
         <tr>
-          <th scope="col">ID</th>
+          <!-- <th scope="col">ID</th> -->
           <th scope="col">表紙</th>
           <th scope="col">書誌事項</th>
           <th scope="col">分類件名</th>
@@ -20,7 +20,7 @@
       <tbody>
         {% for jpro in jpro_books %}
         <tr>
-          <th scope="row">{{ jpro.id }}</th>
+          <!-- <th scope="row">{{ jpro.id }}</th> -->
           <td><img src="https://iss.ndl.go.jp/thumbnail/{{ jpro.ISBN|cut:"-" }}" width="112" height="160"
             onerror="this.onerror=null;this.src='http://images-jp.amazon.com/images/P/{{ jpro.ASIN }}.09.MZZZZZZZ.jpg';"/></td>
           <td><b>{{ jpro.title }} {{ jpro.volume }}
@@ -67,7 +67,10 @@
                 {{ jpro.ToC|lineRep|linebreaksbr }}</details>
             {% endif %}
             {% endif %}</td>
-          <td><b>{{ jpro.ccode }}</b><br>
+          <td><b>NDC : {{ jpro.NDC }}</b><br>
+            {% if jpro.ccode %}
+              Cコード {{ jpro.ccode }}<br>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}

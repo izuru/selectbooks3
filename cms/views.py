@@ -24,7 +24,7 @@ class JproView(generic.ListView):
     paginate_by = 10
 
     def get(self, request, *args, **kwargs):
-        jpro_books = jpro.objects.all().order_by('id')
+        jpro_books = jpro.objects.all().order_by('NDC')
         self.object_list = jpro_books
 
         context = self.get_context_data(object_list=self.object_list)

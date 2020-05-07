@@ -224,6 +224,7 @@ def ndc_predict(bib):
     request = urllib.request.Request(url, data)
     response = urllib.request.urlopen(request)
     content = json.loads(response.read().decode('utf8'))
+    print(content)
 
     ndc = []
     #for predict in content:
@@ -231,13 +232,22 @@ def ndc_predict(bib):
         return(content[0]['value'], content[1]['value'], content[2]['value'])
 
 def main():
-    conn = sqlite3.connect('C:/Users/出/PycharmProjects/selectbooks3/db.sqlite3')
+    conn = sqlite3.connect('C:/Users/izuru/PycharmProjects/selectbooks3/db.sqlite3')
     c = conn.cursor()
     row_ndc = [["",""]]
     i = 1
     for row in c.execute('SELECT * FROM cms_jpro ORDER BY id'):
         if row[19] == "":
-            bib = row[2] + " " + row[4] + " " + row[5] + " " + row[6] + " " + row[13].replace(";", " ")
+            bib = row[2]
+            if row[4] != "":
+                bib = bib + " " + row[4]
+            if row[5] != "":
+                bib = bib + " (" + row[5] + ")"
+            if row[6] != "":
+                bib = bib + " " + row[6]
+            if row[13] != "":
+                bib = bib + " " + row[13].replace(";", " ")
+            print(bib)
             NDC = ndc_predict(bib)
             ccode = row[11][0:4]
             cNDC = ndc_ccode(NDC, ccode)
